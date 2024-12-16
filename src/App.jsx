@@ -20,15 +20,20 @@ const App = () => {
 
   // Define toggleComplete function
   const toggleComplete = (id) => {
-    const updatedsTasks = tasks.map((task) => {
+    const updatedTasks = tasks.map((task) => {
       if (task.id === id) {
         return {...task, isComplete: !task.isComplete};
       }else {
         return task;
       }
     });
-    setTasks(updatedsTasks);
+    setTasks(updatedTasks);
   };
+
+  const deleteTask = (id) => {
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    setTasks(updatedTasks);
+  }
 
   return (
     <div className="App">
@@ -37,7 +42,7 @@ const App = () => {
       </header>
       <main>
         <div>
-          <TaskList tasks={tasks} onToggleComplete={toggleComplete}/>
+          <TaskList tasks={tasks} onToggleComplete={toggleComplete} onDeleteTask={deleteTask}/>
         </div>
       </main>
     </div>
