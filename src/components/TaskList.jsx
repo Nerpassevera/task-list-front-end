@@ -3,18 +3,18 @@ import Task from './Task.jsx';
 import './TaskList.css';
 
 const TaskList = ({ tasks, onToggleComplete, onDeleteTask }) => {
-  const getTaskListJSX = () => 
+  const getTaskListJSX = () =>
     tasks.map((task) => (
-        <Task
-          key={task.id}
-          id={task.id}
-          title={task.title}
-          isComplete={task.isComplete}
-          onToggleComplete={onToggleComplete}
-          onDeleteTask={onDeleteTask}
-        />
-      ));
-    
+      <Task
+        key={task.id}
+        id={task.id}
+        title={task.title}
+        isComplete={task.isComplete}
+        onToggleComplete={onToggleComplete}
+        onDeleteTask={onDeleteTask}
+      />
+    ));
+
   return <ul className="tasks__list no-bullet">{getTaskListJSX(tasks)}</ul>;
 };
 
