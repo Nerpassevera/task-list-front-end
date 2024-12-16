@@ -32,9 +32,8 @@ const App = () => {
   };
 
   const deleteTask = (id) => {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    setTasks(updatedTasks);
-  }
+    return setTasks(tasks => tasks.filter((task) => task.id !== id));
+  };
 
   return (
     <div className="App">
