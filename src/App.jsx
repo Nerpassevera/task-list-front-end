@@ -13,6 +13,17 @@ const getAllTasksApi = () => {
     .catch((error) => console.error('Error fetching data: ', error));
 };
 
+const markTaskCompleteApi = (id, isComplete) => {
+  const completeAction = isComplete ? 'mark_complete' : 'mark_incomplete';
+
+  return axios
+    .patch(`${kbaseURL}/tasks/${id}/${completeAction}`, {
+      completed_at: new Date().toISOString(),
+    })
+    .then((response) => response.data.task)
+    .catch((error) => console.error('Error marking task complete: ', error));
+};
+
 // App component
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -27,19 +38,43 @@ const App = () => {
       .then((tasks) => {
         return tasks.map((task) => convertFromApi(task));
       })
-      .then((fetchedTasks) => setTasks( () => fetchedTasks));
+      .then((fetchedTasks) => {
+        console.log('fetchedTasks', fetchedTasks);
+
+        setTasks(() => fetchedTasks);
+      });
   };
 
   // convert the data from the server to the format we need
   const convertFromApi = (apiTask) => {
-    return {
+    const convertedTask = {
       ...apiTask,
       isComplete: apiTask.is_complete,
     };
+    if (apiTask.completed_at) {
+      convertedTask.completedAt = new Date(apiTask.completed_at);
+    }
+    delete convertedTask['is_complete'];
+    delete convertedTask['completed_at'];
+    console.log('convertedTask', convertedTask);
+
+    return convertedTask;
   };
 
   // Define toggleComplete function
-  const toggleComplete = (id) => {
+  const toggleComplete = (id, isComplete) => {
+    console.log('toggleComplete', id, isComplete);
+
+    markTaskCompleteApi(id, isComplete)
+      .then((apiTask) => convertFromApi(apiTask))
+      .then(({ task }) => console.log('AAAAAAAAAA', task.id))
+      .then(({ task }) => updateTasksState(task.id))
+      .catch((error) => console.error('Error marking task complete: ', error));
+  };
+
+  const updateTasksState = (id) => {
+    console.log('updateTasksState', id);
+
     setTasks((tasks) => {
       return tasks.map((task) => {
         if (task.id === id) {
@@ -52,22 +87,11 @@ const App = () => {
   };
 
   const deleteTask = (id) => {
-    return setTasks((tasks) => tasks.filter((task) => task.id !== id));
+    axios
+      .delete(`${kbaseURL}/tasks/${id}`)
+      .then(() => setTasks((tasks) => tasks.filter((task) => task.id !== id)))
+      .catch((error) => console.error('Error deleting task: ', error));
   };
-
-  // make a functin to fetch data from the server
-
-  // const deleteDog = (id) => {
-  //   axios
-  //     .delete(`${URL}/${id}`)
-  //     .then(() => {
-  //       const newDogs = dogs.filter((dog) => dog.id !== id);
-  //       setDogs(newDogs);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   // const addDog = (dogData) => {
   //   axios
@@ -81,8 +105,8 @@ const App = () => {
   // };
 
   return (
-    <div className='App'>
-      <header className='App-header'>
+    <div className="App">
+      <header className="App-header">
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
