@@ -10,7 +10,6 @@ const getAllTasksApi = () => {
   return axios
     .get(`${kbaseURL}/tasks`)
     .then((response) => response.data)
-    .catch((error) => console.error('Error fetching data: ', error));
 };
 
 const markTaskCompleteApi = (id, isComplete) => {
@@ -20,8 +19,12 @@ const markTaskCompleteApi = (id, isComplete) => {
     .patch(`${kbaseURL}/tasks/${id}/${completeAction}`, {
       completed_at: new Date().toISOString(),
     })
-    .then((response) => response.data.task)
-    .catch((error) => console.error('Error marking task complete: ', error));
+    .then((response) => {
+      if (!response.data) {
+        throw new Error('No response data received');
+      }
+      return response.data;
+    })
 };
 
 // App component
@@ -39,46 +42,41 @@ const App = () => {
         return tasks.map((task) => convertFromApi(task));
       })
       .then((fetchedTasks) => {
-        console.log('fetchedTasks', fetchedTasks);
-
         setTasks(() => fetchedTasks);
       });
   };
 
   // convert the data from the server to the format we need
-  const convertFromApi = (apiTask) => {
+  const convertFromApi = (task) => {
     const convertedTask = {
-      ...apiTask,
-      isComplete: apiTask.is_complete,
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      isComplete: task.is_complete,
     };
-    if (apiTask.completed_at) {
-      convertedTask.completedAt = new Date(apiTask.completed_at);
+    if (task.completed_at) {
+      convertedTask.completedAt = new Date(task.completed_at);
     }
-    delete convertedTask['is_complete'];
-    delete convertedTask['completed_at'];
-    console.log('convertedTask', convertedTask);
 
+    delete convertedTask.is_complete;
+    delete convertedTask.completed_at;
     return convertedTask;
   };
 
   // Define toggleComplete function
   const toggleComplete = (id, isComplete) => {
-    console.log('toggleComplete', id, isComplete);
-
     markTaskCompleteApi(id, isComplete)
-      .then((apiTask) => convertFromApi(apiTask))
-      .then(({ task }) => console.log('AAAAAAAAAA', task.id))
-      .then(({ task }) => updateTasksState(task.id))
-      .catch((error) => console.error('Error marking task complete: ', error));
+      .then(({task}) => {
+        const newTask = convertFromApi(task);
+        updateTasksState(newTask);
+      });
   };
 
-  const updateTasksState = (id) => {
-    console.log('updateTasksState', id);
-
+  const updateTasksState = (newTask) => {
     setTasks((tasks) => {
       return tasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, isComplete: !task.isComplete };
+        if (task.id === newTask.id) {
+          return newTask;
         } else {
           return task;
         }
@@ -90,7 +88,6 @@ const App = () => {
     axios
       .delete(`${kbaseURL}/tasks/${id}`)
       .then(() => setTasks((tasks) => tasks.filter((task) => task.id !== id)))
-      .catch((error) => console.error('Error deleting task: ', error));
   };
 
   // const addDog = (dogData) => {
@@ -101,7 +98,6 @@ const App = () => {
   //       const newDogs = [...dogs, newDog];
   //       setDogs(newDogs);
   //     })
-  //     .catch((error) => console.log(error));
   // };
 
   return (
