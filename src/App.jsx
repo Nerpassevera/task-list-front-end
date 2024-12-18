@@ -1,32 +1,50 @@
 import TaskList from './components/TaskList.jsx';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TASKS = [
-  {
-    id: 1,
-    title: 'Mow the lawn',
-    isComplete: false,
-  },
-  {
-    id: 2,
-    title: 'Cook Pasta',
-    isComplete: true,
-  },
-];
+const kbaseURL = 'http://127.0.0.1:5000';
 
+// Logic for fetching data from the server
+const getAllTasksApi = () => {
+  return axios
+    .get(`${kbaseURL}/tasks`)
+    .then((response) => response.data)
+    .catch((error) => console.error('Error fetching data: ', error));
+};
+
+// App component
 const App = () => {
   const [tasks, setTasks] = useState([]);
-  const kbaseURL = 'http://localhost:5000';
+
+  useEffect(() => {
+    getAllTasks();
+  }, []);
+
+  // make a function to get all tasks
+  const getAllTasks = () => {
+    getAllTasksApi()
+      .then((tasks) => {
+        return tasks.map((task) => convertFromApi(task));
+      })
+      .then((fetchedTasks) => setTasks( () => fetchedTasks));
+  };
+
+  // convert the data from the server to the format we need
+  const convertFromApi = (apiTask) => {
+    return {
+      ...apiTask,
+      isComplete: apiTask.is_complete,
+    };
+  };
 
   // Define toggleComplete function
   const toggleComplete = (id) => {
-    setTasks( tasks => {
+    setTasks((tasks) => {
       return tasks.map((task) => {
         if (task.id === id) {
-          return {...task, isComplete: !task.isComplete};
-        }else {
+          return { ...task, isComplete: !task.isComplete };
+        } else {
           return task;
         }
       });
@@ -34,50 +52,50 @@ const App = () => {
   };
 
   const deleteTask = (id) => {
-    return setTasks(tasks => tasks.filter((task) => task.id !== id));
+    return setTasks((tasks) => tasks.filter((task) => task.id !== id));
   };
 
   // make a functin to fetch data from the server
 
-  const getAllTasksApi = () => {
-    return axios.get(`${kbaseURL}/tasks`)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('Error fetching data: ', error);
-      });
-  }
-  // convert the data from the server to the format we need
-  const convertFromApi = (tasks) => {
-    const newTask = {
-      ...apiTask,
-      isComplete: apiTask.is_complete,
-    }
+  // const deleteDog = (id) => {
+  //   axios
+  //     .delete(`${URL}/${id}`)
+  //     .then(() => {
+  //       const newDogs = dogs.filter((dog) => dog.id !== id);
+  //       setDogs(newDogs);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
-  // make a function to get all tasks
-  const getAllTasks = () => {
-    getAllTasksApi()
-      .then((tasks) => {
-        const newTasks = tasks.map((task) => {
-          return convertFromApi(task);
-        });
-      });
-  }
+  // const addDog = (dogData) => {
+  //   axios
+  //     .post(URL, dogData)
+  //     .then((response) => {
+  //       const newDog = response.data;
+  //       const newDogs = [...dogs, newDog];
+  //       setDogs(newDogs);
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className='App'>
+      <header className='App-header'>
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
         <div>
-          <TaskList tasks={tasks} onToggleComplete={toggleComplete} onDeleteTask={deleteTask}/>
+          <TaskList
+            tasks={tasks}
+            onToggleComplete={toggleComplete}
+            onDeleteTask={deleteTask}
+          />
         </div>
       </main>
     </div>
   );
 };
-
 
 export default App;
