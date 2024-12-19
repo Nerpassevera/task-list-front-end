@@ -2,6 +2,8 @@ import TaskList from './components/TaskList.jsx';
 import './App.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import newTaskForm from './components/NewTaskForm.jsx';
+
 
 const kbaseURL = 'http://127.0.0.1:5000';
 
@@ -79,6 +81,14 @@ const App = () => {
       });
   };
 
+  const handleSubmit = (data) => {
+    axios.post(`${kbaseURL}/tasks`, data)
+      .then((result) => {
+        setTasks((prevTasks) => [convertFromApi(result.data), ...prevTasks,]);
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -86,6 +96,7 @@ const App = () => {
       </header>
       <main>
         <div>
+          <newTaskForm handleSubmit={handleSubmit} />
           <TaskList 
           tasks={tasks} 
           onToggleComplete={handleToggleComplete}
