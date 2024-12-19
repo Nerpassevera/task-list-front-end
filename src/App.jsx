@@ -51,7 +51,7 @@ const App = () => {
 
   useEffect(() => {
     getAllTasks();
-  }, [tasks]);
+  }, []);
 
   // make a function to get all tasks
   const getAllTasks = () => {
