@@ -3,42 +3,50 @@ import './App.css';
 import { useState } from 'react';
 import axios from 'axios';
 
-const TASKS = [
-  {
-    id: 1,
-    title: 'Mow the lawn',
-    isComplete: false,
-  },
-  {
-    id: 2,
-    title: 'Cook Pasta',
-    isComplete: true,
-  },
-];
+// const TASKS = [
+//   {
+//     id: 1,
+//     title: 'Mow the lawn',
+//     isComplete: false,
+//   },
+//   {
+//     id: 2,
+//     title: 'Cook Pasta',
+//     isComplete: true,
+//   },
+// ];
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const kbaseURL = 'http://localhost:5000';
 
   // Define toggleComplete function
-  const toggleComplete = (id) => {
-    setTasks( tasks => {
-      return tasks.map((task) => {
-        if (task.id === id) {
-          return {...task, isComplete: !task.isComplete};
-        }else {
-          return task;
-        }
+  // const toggleComplete = (id) => {
+  //   setTasks( tasks => {
+  //     return tasks.map((task) => {
+  //       if (task.id === id) {
+  //         return {...task, isComplete: !task.isComplete};
+  //       }else {
+  //         return task;
+  //       }
+  //     });
+  //   });
+  // };
+
+  const toggleCompleteApi = (id) => {
+    const endpointAction = isComplete ? 'mark_incomplete' : 'mark_complete';
+    return axios.patch(`${kbaseURL}/tasks/${id}/${endpointAction}`)
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error('Error toggling complete: ', error);
       });
-    });
-  };
+  }
 
   const deleteTask = (id) => {
     return setTasks(tasks => tasks.filter((task) => task.id !== id));
   };
 
   // make a functin to fetch data from the server
-
   const getAllTasksApi = () => {
     return axios.get(`${kbaseURL}/tasks`)
       .then((response) => {
@@ -53,7 +61,10 @@ const App = () => {
     const newTask = {
       ...apiTask,
       isComplete: apiTask.is_complete,
-    }
+    } 
+    delete newTask.is_complete;
+    return newTask;
+  }
 
   // make a function to get all tasks
   const getAllTasks = () => {
