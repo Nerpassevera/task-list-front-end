@@ -1,80 +1,83 @@
 import TaskList from './components/TaskList.jsx';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// const TASKS = [
-//   {
-//     id: 1,
-//     title: 'Mow the lawn',
-//     isComplete: false,
-//   },
-//   {
-//     id: 2,
-//     title: 'Cook Pasta',
-//     isComplete: true,
-//   },
-// ];
+const kbaseURL = 'http://127.0.0.1:5000';
+
+// convert the data from the server to the format we need
+const convertFromApi = (apiTask) => {
+  const newTask = {
+    ...apiTask,
+    isComplete: apiTask.is_complete ?? false,
+  } 
+  delete newTask.is_complete;
+  return newTask;
+}
+
+// make a functin to fetch data from the server
+const getAllTasksApi = () => {
+  return axios.get(`${kbaseURL}/tasks`)
+    .then((response) => {
+      const apiTasks = response.data;
+      const newTasks = apiTasks.map(convertFromApi);
+      return newTasks;
+    })
+    .catch((error) => {
+      console.error('Error fetching tasks  data: ', error);
+    });
+};
+
+
+const toggleCompleteApi = (id, isComplete) => {
+  const endpointAction = isComplete ? 'mark_incomplete' : 'mark_complete';
+  return axios.patch(`${kbaseURL}/tasks/${id}/${endpointAction}`)
+    .then((response) => convertFromApi(response.data))
+    .catch((error) => {
+      console.error('Error toggling task completion:', error);
+    });
+};
+
+
+const deleteTaskApi = (id) => {
+  return axios.delete(`${kbaseURL}/tasks/${id}`)
+    .catch(error => {
+      console.log(error);
+    })
+};  
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
-  const kbaseURL = 'http://localhost:5000';
 
-  // Define toggleComplete function
-  // const toggleComplete = (id) => {
-  //   setTasks( tasks => {
-  //     return tasks.map((task) => {
-  //       if (task.id === id) {
-  //         return {...task, isComplete: !task.isComplete};
-  //       }else {
-  //         return task;
-  //       }
-  //     });
-  //   });
-  // };
-
-  const toggleCompleteApi = (id) => {
-    const endpointAction = isComplete ? 'mark_incomplete' : 'mark_complete';
-    return axios.patch(`${kbaseURL}/tasks/${id}/${endpointAction}`)
-      .then((response) => response.data)
-      .catch((error) => {
-        console.error('Error toggling complete: ', error);
-      });
-  }
-
-  const deleteTask = (id) => {
-    return setTasks(tasks => tasks.filter((task) => task.id !== id));
-  };
-
-  // make a functin to fetch data from the server
-  const getAllTasksApi = () => {
-    return axios.get(`${kbaseURL}/tasks`)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('Error fetching data: ', error);
-      });
-  }
-  // convert the data from the server to the format we need
-  const convertFromApi = (tasks) => {
-    const newTask = {
-      ...apiTask,
-      isComplete: apiTask.is_complete,
-    } 
-    delete newTask.is_complete;
-    return newTask;
-  }
+  useEffect(() => {
+    getAllTasks();
+  }, [tasks]);
 
   // make a function to get all tasks
   const getAllTasks = () => {
     getAllTasksApi()
       .then((tasks) => {
-        const newTasks = tasks.map((task) => {
-          return convertFromApi(task);
+        setTasks(tasks);
         });
+  };
+
+  const handleToggleComplete = (id) => {
+    const task = tasks.find((task) => task.id === id);
+
+    toggleCompleteApi(id, task.isComplete)
+      .then((updatedTask) => {
+        setTasks((taskData) =>
+        taskData.map((task) => (task.id === id ? updatedTask : task))
+      );
+    });
+  };
+
+  const handleDeleteTask = (id) => {
+    deleteTaskApi(id)
+      .then(() => {
+        setTasks((taskData) => taskData.filter((task) => task.id !== id));
       });
-  }
+  };
 
   return (
     <div className="App">
@@ -83,12 +86,16 @@ const App = () => {
       </header>
       <main>
         <div>
-          <TaskList tasks={tasks} onToggleComplete={toggleComplete} onDeleteTask={deleteTask}/>
+          <TaskList 
+          tasks={tasks} 
+          onToggleComplete={handleToggleComplete}
+          onDeleteTask={handleDeleteTask}
+          />
         </div>
       </main>
     </div>
   );
-};
+}
 
 
 export default App;
