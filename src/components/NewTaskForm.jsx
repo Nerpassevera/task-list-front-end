@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 
-const newTaskForm = () => {
+const NewTaskForm = () => {
 
     const [name, setName] = useState('');
 
@@ -22,7 +22,7 @@ const newTaskForm = () => {
 
 
     return(
-        <form onsubmit = {onHandleSubmit}>
+        <form onSubmit = {onHandleSubmit}>
             <label htmlFor = "name">Task Name: </label>
             <input type="text" id = "name" name = "name" value = {name} onChange ={handleNameChange} />
             <div>
@@ -32,4 +32,4 @@ const newTaskForm = () => {
     );
 };
 
-export default newTaskForm;
+export default NewTaskForm;
