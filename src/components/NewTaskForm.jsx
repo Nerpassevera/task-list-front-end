@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 
-const NewTaskForm = () => {
+const NewTaskForm = ({ handleSubmit }) => {
 
     const [name, setName] = useState('');
 

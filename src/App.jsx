@@ -82,6 +82,7 @@ const App = () => {
   };
 
   const handleSubmit = (data) => {
+    console.log('sending data:', data);
     axios.post(`${kbaseURL}/tasks`, data)
       .then((result) => {
         setTasks((prevTasks) => [convertFromApi(result.data), ...prevTasks,]);
