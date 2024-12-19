@@ -9,11 +9,13 @@ const kbaseURL = 'http://127.0.0.1:5000';
 
 // convert the data from the server to the format we need
 const convertFromApi = (apiTask) => {
+  console.log('apisTask from api call: ',apiTask);
   const newTask = {
     ...apiTask,
     isComplete: apiTask.is_complete ?? false,
   } 
   delete newTask.is_complete;
+  console.log(newTask);
   return newTask;
 }
 
@@ -34,7 +36,13 @@ const getAllTasksApi = () => {
 const toggleCompleteApi = (id, isComplete) => {
   const endpointAction = isComplete ? 'mark_incomplete' : 'mark_complete';
   return axios.patch(`${kbaseURL}/tasks/${id}/${endpointAction}`)
-    .then((response) => convertFromApi(response.data))
+    .then((response) => {
+      console.log('response from toggleCompleteApi:', response.data.task);
+      const newCat = convertFromApi(response.data.task)
+      return newCat; 
+    
+    })
+    
     .catch((error) => {
       console.error('Error toggling task completion:', error);
     });
