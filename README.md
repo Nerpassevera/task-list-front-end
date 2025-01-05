@@ -77,8 +77,8 @@ This frontend application is deployed using GitHub Pages. You can access the liv
 
 ## Authors
 
-- [Tatiana Trofimova]([link to GitHub profile](https://github.com/Nerpassevera))
-- [Wei Qiang]([link to GitHub profile](https://github.com/hintow))
+- [Tatiana Trofimova](https://github.com/Nerpassevera)
+- [Wei Qiang](https://github.com/hintow)
   
 ## Contributing
 
