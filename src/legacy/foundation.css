@@ -32,7 +32,7 @@ button {
   margin: 0 0 1rem 0;
   padding: .85em 1em;
   border: 1px solid transparent;
-  border-radius: 0;
+  border-radius: 4px;
   transition: background-color .25s ease-out,color .25s ease-out;
   font-family: inherit;
   font-size: .9rem;
@@ -42,14 +42,14 @@ button {
 }
 
 .button, .button.disabled, .button.disabled:focus, .button.disabled:hover, .button[disabled], .button[disabled]:focus, .button[disabled]:hover {
-  background-color: #1779ba;
-  color: #fefefe;
+  background-color: #83bde3;
+  /* color: #fefefe; */
 }
 
-.button:focus, .button:hover {
+/* .button:focus, .button:hover {
   background-color: #14679e;
   color: #fefefe;
-}
+} */
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
   font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;

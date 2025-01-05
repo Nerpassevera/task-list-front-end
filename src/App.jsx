@@ -1,53 +1,60 @@
+import { useState, useEffect } from 'react';
 import TaskList from './components/TaskList.jsx';
 import './App.css';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import NewTaskForm from './components/NewTaskForm.jsx';
+import {
+  addInstanceApi,
+  markTaskCompleteApi,
+  deleteInstanceApi,
+  getAllInstancesApi,
+} from './utilities/utilityFunctions.js';
 
-const kbaseURL = 'http://127.0.0.1:5000';
+// Goal for the task functionality (in development)
+// import NewGoalForm from './components/NewGoalForm.jsx';
 
-// Logic for fetching data from the server
-const getAllTasksApi = () => {
-  return axios
-    .get(`${kbaseURL}/tasks`)
-    .then((response) => response.data)
-};
-
-const markTaskCompleteApi = (id, isComplete) => {
-  const completeAction = isComplete ? 'mark_complete' : 'mark_incomplete';
-
-  return axios
-    .patch(`${kbaseURL}/tasks/${id}/${completeAction}`, {
-      completed_at: new Date().toISOString(),
-    })
-    .then((response) => {
-      if (!response.data) {
-        throw new Error('No response data received');
-      }
-      return response.data;
-    })
-};
-
-// App component
 const App = () => {
   const [tasks, setTasks] = useState([]);
+  const [showTaskForm, setShowTaskForm] = useState(false);
+
+  // Goal for the task functionality (in development)
+  // const [goals, setGoals] = useState([]);
+  // const [showGoalForm, setShowGoalForm] = useState(false);
 
   useEffect(() => {
     getAllTasks();
+    // Goal for the task functionality (in development)
+    // getAllGoals();
   }, []);
 
   // make a function to get all tasks
   const getAllTasks = () => {
-    getAllTasksApi()
-      .then((tasks) => {
-        return tasks.map((task) => convertFromApi(task));
-      })
+    getAllInstancesApi('tasks')
+      .then((tasks) => tasks.map((task) => convertTaskFromApiHelper(task)))
       .then((fetchedTasks) => {
         setTasks(() => fetchedTasks);
       });
   };
 
-  // convert the data from the server to the format we need
-  const convertFromApi = (task) => {
+  const addTask = (newTask) => {
+    addInstanceApi('tasks', newTask).then((task) =>
+      setTasks((prevTasks) => [
+        ...prevTasks,
+        convertTaskFromApiHelper(task.task),
+      ])
+    );
+  };
+
+  // Goal for the task functionality (in development)
+  // const getAllGoals = () => {
+  //   getAllInstancesApi('goals')
+  //     .then((goals) => goals.map((goal) => convertFromApi(goal)))
+  //     .then((fetchedGoals) => {
+  //       setGoals(() => fetchedGoals);
+  //     });
+  // };
+
+  // convert the data from the server to the JS format
+  const convertTaskFromApiHelper = (task) => {
     const convertedTask = {
       id: task.id,
       title: task.title,
@@ -65,11 +72,10 @@ const App = () => {
 
   // Define toggleComplete function
   const toggleComplete = (id, isComplete) => {
-    markTaskCompleteApi(id, isComplete)
-      .then(({task}) => {
-        const newTask = convertFromApi(task);
-        updateTasksState(newTask);
-      });
+    markTaskCompleteApi(id, isComplete).then(({ task }) => {
+      const newTask = convertTaskFromApiHelper(task);
+      updateTasksState(newTask);
+    });
   };
 
   const updateTasksState = (newTask) => {
@@ -85,20 +91,10 @@ const App = () => {
   };
 
   const deleteTask = (id) => {
-    axios
-      .delete(`${kbaseURL}/tasks/${id}`)
-      .then(() => setTasks((tasks) => tasks.filter((task) => task.id !== id)))
+    deleteInstanceApi('tasks', id).then(() =>
+      setTasks((tasks) => tasks.filter((task) => task.id !== id))
+    );
   };
-
-  // const addDog = (dogData) => {
-  //   axios
-  //     .post(URL, dogData)
-  //     .then((response) => {
-  //       const newDog = response.data;
-  //       const newDogs = [...dogs, newDog];
-  //       setDogs(newDogs);
-  //     })
-  // };
 
   return (
     <div className="App">
@@ -106,7 +102,20 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
-        <div>
+        {/* {showGoalForm && <NewGoalForm addGoal={() => console.log('pfffrrrh')}/>}
+        <br />
+        <button onClick={() => setShowGoalForm((show) => !show)}>Show goal form</button>
+        <br /> */}
+        {showTaskForm && <NewTaskForm addTask={addTask} goals={goals} />}
+        <br />
+        <button
+          className="show-new-task-form button"
+          onClick={() => setShowTaskForm((show) => !show)}
+        >
+          {showTaskForm ? 'Hide task form' : 'Show task form'}
+        </button>
+        <br />
+        <div className="task-list-wrapper">
           <TaskList
             tasks={tasks}
             onToggleComplete={toggleComplete}

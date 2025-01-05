@@ -27,3 +27,17 @@
 .App-link {
   color: #61dafb;
 }
+
+.task-list-wrapper {
+  display: inline-block;
+  min-width: 350px;
+}
+
+.show-new-task-form-btn {
+  width: 52vw;
+  min-width: 350px;
+  padding: 10px;
+  border: #282c34 solid;
+  border-radius: 5px;
+  background-color: #1779ba40;
+}

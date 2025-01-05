@@ -9,6 +9,7 @@ const TaskList = ({ tasks, onToggleComplete, onDeleteTask }) => {
         key={task.id}
         id={task.id}
         title={task.title}
+        description={task.description}
         isComplete={task.isComplete}
         onToggleComplete={onToggleComplete}
         onDeleteTask={onDeleteTask}
