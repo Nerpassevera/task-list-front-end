@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import './formStyle.css';
 
-const NewTaskForm = ({ addTask, goals }) => {
+const NewTaskForm = ({ addTask }) => {
   const taskForm = {
     title: '',
     description: '',

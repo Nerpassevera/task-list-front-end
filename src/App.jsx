@@ -3,27 +3,18 @@ import TaskList from './components/TaskList.jsx';
 import './App.css';
 import NewTaskForm from './components/NewTaskForm.jsx';
 import {
-  addInstanceApi,
-  markTaskCompleteApi,
-  deleteInstanceApi,
   getAllInstancesApi,
+  addInstanceApi,
+  deleteInstanceApi,
+  markTaskCompleteApi,
 } from './utilities/utilityFunctions.js';
-
-// Goal for the task functionality (in development)
-// import NewGoalForm from './components/NewGoalForm.jsx';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const [showTaskForm, setShowTaskForm] = useState(false);
 
-  // Goal for the task functionality (in development)
-  // const [goals, setGoals] = useState([]);
-  // const [showGoalForm, setShowGoalForm] = useState(false);
-
   useEffect(() => {
     getAllTasks();
-    // Goal for the task functionality (in development)
-    // getAllGoals();
   }, []);
 
   // make a function to get all tasks
@@ -43,15 +34,6 @@ const App = () => {
       ])
     );
   };
-
-  // Goal for the task functionality (in development)
-  // const getAllGoals = () => {
-  //   getAllInstancesApi('goals')
-  //     .then((goals) => goals.map((goal) => convertFromApi(goal)))
-  //     .then((fetchedGoals) => {
-  //       setGoals(() => fetchedGoals);
-  //     });
-  // };
 
   // convert the data from the server to the JS format
   const convertTaskFromApiHelper = (task) => {
@@ -102,11 +84,7 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
-        {/* {showGoalForm && <NewGoalForm addGoal={() => console.log('pfffrrrh')}/>}
-        <br />
-        <button onClick={() => setShowGoalForm((show) => !show)}>Show goal form</button>
-        <br /> */}
-        {showTaskForm && <NewTaskForm addTask={addTask} goals={goals} />}
+        {showTaskForm && <NewTaskForm addTask={addTask}/>}
         <br />
         <button
           className="show-new-task-form button"

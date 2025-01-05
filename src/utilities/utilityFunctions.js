@@ -30,6 +30,5 @@ export const markTaskCompleteApi = (id, isComplete) => {
 };
 
 export const deleteInstanceApi = (type, id) => {
-  return axios
-    .delete(`${kbaseURL}/${type}/${id}`);
-}
+  return axios.delete(`${kbaseURL}/${type}/${id}`);
+};
