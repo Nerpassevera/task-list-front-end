@@ -3,6 +3,10 @@
 
 A frontend React-based application for managing tasks in a full-stack project. This frontend interacts with a backend API and a PostgreSQL database to provide task management functionality.
 
+## About the Project
+
+This project is part of the coursework for [Ada Developers Academy](https://adadevelopersacademy.org/), created to practice and strengthen skills in full-stack development. It focuses on building a task management application with a frontend, backend, and database integration.
+
 ## Project Overview
 
 This project is part of a full-stack application that includes:
@@ -71,6 +75,11 @@ This frontend application is deployed using GitHub Pages. You can access the liv
 - Add a feature to filter and sort tasks based on priority or completion status.
 - Allow users to manage Slack channel settings directly from the UI.
 
+## Authors
+
+- [Tatiana Trofimova]([link to GitHub profile](https://github.com/Nerpassevera))
+- [Wei Qiang]([link to GitHub profile](https://github.com/hintow))
+  
 ## Contributing
 
 This project is built for educational purposes, and contributions are welcome. If you'd like to contribute, please fork the repository, make changes, and open a pull request.
