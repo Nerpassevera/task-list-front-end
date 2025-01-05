@@ -1,29 +1,80 @@
-# Task List Front End
-In this pair project, we will be working with state & events in React.  Then we will use the `useEffect` hook to update state from an API and persist state to an API with events.
 
-## Learning Goals
+# Task List Frontend Application
 
-The goals of this pair project are to:
+A frontend React-based application for managing tasks in a full-stack project. This frontend interacts with a backend API and a PostgreSQL database to provide task management functionality.
 
-- Gain an ability to use State in a React component and pass information to other components via props
-- Use the `useEffect` hook to update state after the component first mounts
-- Use `axios` to make API calls to update state
-- Write controlled form components
+## Project Overview
 
-## Forking the Repository
-When forking this repository, be sure to uncheck the button that says: "Copy the `main` branch only"
+This project is part of a full-stack application that includes:
+- **Backend API**: A Flask-based RESTful API. [Link to Backend Repository](https://github.com/Nerpassevera/task-list-api)
+- **Database**: PostgreSQL database to store task data.
 
+## Features
 
-## Project Directions
+- **Create Tasks**: Add new tasks.
+- **Delete Tasks**: Remove tasks from the list.
+- **Read Tasks**: View all tasks dynamically.
+- **Mark Tasks as Completed/Incompleted**: Update task status and reflect it dynamically in the UI.
+- **Slack Notifications**: A Slack message is sent to a designated channel when a task is marked as completed.
 
-- Part 1: React Components, Props, State and Event Handling
-    - [Wave 01: Setup and Baseline](./project-docs/wave-01.md)
-    - [Wave 02: State and Event Handling](./project-docs/wave-02.md)
-    - [Wave 03: Lifting Up State](./project-docs/wave-03.md)
-- Part 2: Connecting to the Task List API
-    - [Wave 04: useEffect And Axios](./project-docs/wave-04.md)
-    - [Wave 05: Handling Forms](./project-docs/wave-05.md)
+## Technologies Used
 
-## Notes on Tests
+### Frontend
+- **React**: A JavaScript library for building user interfaces.
+- **Axios**: Used for making HTTP requests to the backend API.
 
-We have added tests to the project for students to investigate at their own discretion.  They are not required to understand or learn about lifting state, useEffect, APIs or controlled forms.
+### Development Tools
+- **Vite**: A fast build tool for modern web development.
+
+## User Experience Enhancements
+
+- **Dynamic Task Display**: Tasks are dynamically updated in the UI without needing to refresh the page.
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js (version 16 or higher)
+
+### Installation
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/Nerpassevera/task-list-front-end.git
+    cd task-list-front-end
+    ```
+
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
+
+3. Start the development server:
+    ```bash
+    npm run dev
+    ```
+
+4. To build for production:
+    ```bash
+    npm run build
+    ```
+
+## Deployment
+
+This frontend application is deployed using GitHub Pages. You can access the live version [here](https://nerpassevera.github.io/task-list-front-end).
+
+## Future Plans
+
+- Add functionality to edit task titles and descriptions.
+- Allow users to dynamically change the Slack channel for notifications.
+- Display user-friendly success and error messages for actions like exceeding text field length or other validations.
+- Implement user-friendly notifications for both successful and failed actions.
+- Add a feature to filter and sort tasks based on priority or completion status.
+- Allow users to manage Slack channel settings directly from the UI.
+
+## Contributing
+
+This project is built for educational purposes, and contributions are welcome. If you'd like to contribute, please fork the repository, make changes, and open a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
