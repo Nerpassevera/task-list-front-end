@@ -81,7 +81,7 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Ada&apos;s Task List</h1>
+        <h1>Task List</h1>
       </header>
       <main>
         {showTaskForm && <NewTaskForm addTask={addTask}/>}
