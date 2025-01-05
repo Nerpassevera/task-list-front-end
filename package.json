@@ -10,6 +10,7 @@
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build" 
   },
   "dependencies": {
