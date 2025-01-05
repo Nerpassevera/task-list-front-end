@@ -13,6 +13,12 @@ This project is part of a full-stack application that includes:
 - **Backend API**: A Flask-based RESTful API. [Link to Backend Repository](https://github.com/Nerpassevera/task-list-api)
 - **Database**: PostgreSQL database to store task data.
 
+
+## Deployed Application
+
+- **Backend Deployment**: [Deployed Backend on Render](https://task-list-api-ai13.onrender.com)
+- **Frontend Deployment**: [Deployed Frontend on GitHub Pages](https://nerpassevera.github.io/task-list-front-end)
+
 ## Features
 
 - **Create Tasks**: Add new tasks.
